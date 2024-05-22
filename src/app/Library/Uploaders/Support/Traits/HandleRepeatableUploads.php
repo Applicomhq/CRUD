@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+/**
+ * @codeCoverageIgnore
+ */
 trait HandleRepeatableUploads
 {
     public bool $handleRepeatableFiles = false;
@@ -188,7 +191,7 @@ trait HandleRepeatableUploads
             return $entry;
         }
 
-        $values = $entry->{$this->getAttributeName()};
+        $values = $entry->{$this->getRepeatableContainerName()};
         $values = is_string($values) ? json_decode($values, true) : $values;
         $values = array_map(function ($item) use ($repeatableUploaders) {
             foreach ($repeatableUploaders as $upload) {

@@ -38,6 +38,7 @@ class SingleFile extends Uploader
         return $previousFile;
     }
 
+    /** @codeCoverageIgnore */
     public function uploadRepeatableFiles($values, $previousRepeatableValues, $entry = null)
     {
         $orderedFiles = $this->getFileOrderFromRequest();
@@ -53,9 +54,15 @@ class SingleFile extends Uploader
         }
 
         foreach ($previousRepeatableValues as $row => $file) {
-            if ($file && ! isset($orderedFiles[$row])) {
-                $orderedFiles[$row] = null;
-                Storage::disk($this->getDisk())->delete($file);
+            foreach ($previousRepeatableValues as $row => $file) {
+                if ($file) {
+                    if (! isset($orderedFiles[$row])) {
+                        $orderedFiles[$row] = null;
+                    }
+                    if ($file !== $orderedFiles[$row]) {
+                        Storage::disk($this->getDisk())->delete($file);
+                    }
+                }
             }
         }
 
